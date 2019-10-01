@@ -9,19 +9,45 @@
 </template>
 
 <script>
-import { checkFingerprint, openFingerprint } from '@/fingerprint';
+import { FingerprintAuth } from '@/androidBiometricAuth';
+const finger = new FingerprintAuth();
 
 export default {
   data: () => ({
     status: ''
   }),
   mounted() {
-    this.status = checkFingerprint();
+    this.status = finger.available();
   },
   methods: {
-    onClick() {
-      openFingerprint();
-    }
+    async onClick() {
+      try {
+        await finger.verifyFingerprint({
+          title: 'FingerPrint to "Open"',
+          description: 'Use your fingerprint to open',
+          buttonCancel: 'Use code',
+        });
+        console.log('Success');
+      } catch (err) {
+        console.log(err)
+      }
+    },
+    // async onClick() {
+    //   try {
+        
+    //     debugger;
+    //     const promise = finger.verifyFingerprint({
+    //         title: 'FingerPrint to "Open"',
+    //         description: 'Use your fingerprint to open',
+    //         buttonCancel: 'Use code',
+    //       });
+
+    //     await promise;
+    //     console.log('Success');
+    //   } catch (err) {
+    //     console.log('Error')
+    //   }
+    // }
   }
 }
 </script>
